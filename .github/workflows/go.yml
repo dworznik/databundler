@@ -18,3 +18,10 @@ jobs:
       
     - name: Build
       run: go build -v .
+
+    - name: Test
+      run: |
+        cd example
+        cp sevensummits.go expect.go
+        bash -ex build.sh
+        cmp sevensummits.go expect.go
