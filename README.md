@@ -1,6 +1,6 @@
 # databundler
 
-![](https://github.com/dworznik/databundler/workflows/Go/badge.svg)
+[![Actions Status](https://github.com/dworznik/databundler/workflows/Go/badge.svg)](https://github.com/dworznik/databundler/actions   )
 
 Embed CSV data as a Golang package.
 
