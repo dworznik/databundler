@@ -1,5 +1,7 @@
 # databundler
 
+![](https://github.com/dworznik/databundler/workflows/Go/badge.svg)
+
 Embed CSV data as a Golang package.
 
 ## Install
