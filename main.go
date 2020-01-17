@@ -26,6 +26,7 @@ type Schema struct {
 	Doc           string
 	CollectionDoc string `yaml:"collection_doc"`
 	Fields        []*Field
+	Keys          []string
 }
 
 func LoadSchema(filename string) (*Schema, error) {
@@ -103,12 +104,52 @@ func Output(pkg string, w io.Writer, s *Schema, r io.Reader) error {
 	return nil
 }
 
+func MapOutput(key string, w io.Writer, s *Schema, r io.Reader) error {
+	i, err := FindField(s.Fields, key)
+	if err != nil {
+		log.Fatal(err)
+	}
+	t := s.Fields[i].Type
+	fmt.Fprintf(w, "var %s%s = map[%s]*%s{\n", inflector.Pluralize(s.Name), key, t, s.Name)
+	c := csv.NewReader(r)
+
+	row := 0
+	for {
+		record, err := c.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		f := s.Fields[i]
+		v := record[i]
+		if xform, ok := formatters[f.Type]; ok {
+			v = xform(v)
+		}
+		fmt.Fprintf(w, "\t%s: &%s[%d],\n",v, inflector.Pluralize(s.Name), row)
+		row++
+	}
+	fmt.Fprintf(w,"}\n")
+	return nil
+}
+
 var (
 	pkgName        = flag.String("pkg", "", "package name")
 	schemaFilename = flag.String("schema", "", "schema yaml file")
 	dataFilename   = flag.String("data", "", "data filename")
 	outputFilename = flag.String("output", "", "output filename")
 )
+
+func FindField(a []*Field, x string) (int, error) {
+	for i, n := range a {
+		if n != nil && x == n.Name {
+			return i, nil
+		}
+	}
+	return len(a), fmt.Errorf("field %s not found", x)
+}
 
 func main() {
 	flag.Parse()
@@ -131,6 +172,19 @@ func main() {
 	defer out.Close()
 
 	err = Output(*pkgName, out, schema, data)
+
+	for _, k := range schema.Keys {
+		data, err := os.Open(*dataFilename)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = MapOutput(k, out, schema, data)
+		data.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}

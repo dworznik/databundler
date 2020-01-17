@@ -24,3 +24,30 @@ var Peaks = []Peak{
 	{"Mount Vinson", 4892, "Antarctica", "Sentinel Range", "", 1966},
 	{"Puncak Jaya", 4884, "Australasia", "Sudirman Range", "Indonesia", 1962},
 }
+var PeaksName = map[string]*Peak{
+	"Mount Everest": &Peaks[0],
+	"Aconcagua":     &Peaks[1],
+	"Denali":        &Peaks[2],
+	"Kilimanjaro":   &Peaks[3],
+	"Mount Elbrus":  &Peaks[4],
+	"Mount Vinson":  &Peaks[5],
+	"Puncak Jaya":   &Peaks[6],
+}
+var PeaksCountry = map[string]*Peak{
+	"Nepal/China":   &Peaks[0],
+	"Argentina":     &Peaks[1],
+	"United States": &Peaks[2],
+	"Tanzania":      &Peaks[3],
+	"Russia":        &Peaks[4],
+	"":              &Peaks[5],
+	"Indonesia":     &Peaks[6],
+}
+var PeaksFirstAscentYear = map[int]*Peak{
+	1953: &Peaks[0],
+	1897: &Peaks[1],
+	1913: &Peaks[2],
+	1889: &Peaks[3],
+	1874: &Peaks[4],
+	1966: &Peaks[5],
+	1962: &Peaks[6],
+}
