@@ -128,10 +128,10 @@ func MapOutput(key string, w io.Writer, s *Schema, r io.Reader) error {
 		if xform, ok := formatters[f.Type]; ok {
 			v = xform(v)
 		}
-		fmt.Fprintf(w, "\t%s: &%s[%d],\n",v, inflector.Pluralize(s.Name), row)
+		fmt.Fprintf(w, "\t%s: &%s[%d],\n", v, inflector.Pluralize(s.Name), row)
 		row++
 	}
-	fmt.Fprintf(w,"}\n")
+	fmt.Fprintf(w, "}\n")
 	return nil
 }
 
